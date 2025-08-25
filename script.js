@@ -31,7 +31,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // WhatsApp Order Function
 function orderProduct(productName, price) {
-    const phoneNumber = "919724976709";
+    const phoneNumber = "919663452045";
     const message = `Hello Digital Art!
 
 I want to order: ${productName}
