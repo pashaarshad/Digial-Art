@@ -91,13 +91,13 @@ const createBackToTopButton = () => {
         right: 30px;
         width: 50px;
         height: 50px;
-        background: #e74c3c;
+        background: linear-gradient(135deg, #8B5CF6, #EC4899);
         color: white;
         border: none;
         border-radius: 50%;
         cursor: pointer;
         font-size: 1.2rem;
-        box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;

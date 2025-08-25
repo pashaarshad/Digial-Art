@@ -38,8 +38,12 @@ body {
 }
 
 .logo h2 {
-    color: #e74c3c;
+    background: linear-gradient(135deg, #8B5CF6, #EC4899, #3B82F6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 1.8rem;
+    font-weight: bold;
 }
 
 .logo i {
@@ -60,7 +64,10 @@ body {
 }
 
 .nav-menu a:hover {
-    color: #e74c3c;
+    background: linear-gradient(135deg, #8B5CF6, #EC4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .hamburger {
@@ -83,7 +90,7 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 100px 20px 50px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #3B82F6 100%);
     color: white;
 }
 
@@ -120,12 +127,12 @@ body {
 }
 
 .btn-primary {
-    background: #e74c3c;
+    background: linear-gradient(135deg, #8B5CF6, #EC4899);
     color: white;
 }
 
 .btn-primary:hover {
-    background: #c0392b;
+    background: linear-gradient(135deg, #7C3AED, #DB2777);
     transform: translateY(-2px);
 }
 
@@ -204,7 +211,10 @@ body {
 }
 
 .feature i {
-    color: #e74c3c;
+    background: linear-gradient(135deg, #8B5CF6, #EC4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-right: 15px;
     font-size: 1.2rem;
 }
@@ -248,7 +258,7 @@ body {
 .service-icon {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, #e74c3c, #f39c12);
+    background: linear-gradient(135deg, #8B5CF6, #EC4899, #3B82F6);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -332,7 +342,10 @@ body {
 .price {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #e74c3c;
+    background: linear-gradient(135deg, #8B5CF6, #EC4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 20px;
 }
 
@@ -344,18 +357,19 @@ body {
 .order-btn {
     width: 100%;
     padding: 12px;
-    background: #e74c3c;
+    background: linear-gradient(135deg, #8B5CF6, #EC4899);
     color: white;
     border: none;
     border-radius: 8px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s;
 }
 
 .order-btn:hover {
-    background: #c0392b;
+    background: linear-gradient(135deg, #7C3AED, #DB2777);
+    transform: translateY(-2px);
 }
 
 /* Contact Section */
@@ -380,7 +394,7 @@ body {
 .contact-item i {
     width: 50px;
     height: 50px;
-    background: #e74c3c;
+    background: linear-gradient(135deg, #8B5CF6, #EC4899);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -425,7 +439,7 @@ body {
 }
 
 .link-btn:hover {
-    background: #e74c3c;
+    background: linear-gradient(135deg, #8B5CF6, #EC4899);
     color: white;
     transform: translateY(-2px);
 }
@@ -475,7 +489,10 @@ body {
 }
 
 .footer-section a:hover {
-    color: #e74c3c;
+    background: linear-gradient(135deg, #8B5CF6, #EC4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .footer-bottom {
