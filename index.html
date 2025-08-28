@@ -6,9 +6,135 @@
     <title>Random Report - Sign Board Manufacturers & Printing Services</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+    }
+    .modal {
+        background: #fff;
+        border-radius: 16px;
+        max-width: 400px;
+        width: 95%;
+        padding: 32px 24px 24px 24px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        position: relative;
+        animation: fadeIn 0.3s;
+    }
+    .modal h2 {
+        margin-bottom: 18px;
+        font-size: 1.5rem;
+        color: #8B5CF6;
+    }
+    .modal label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 500;
+    }
+    .modal input, .modal select {
+        width: 100%;
+        padding: 8px 10px;
+        margin-bottom: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+    }
+    .modal .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+    .modal .btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        background: linear-gradient(135deg, #8B5CF6, #EC4899);
+        color: #fff;
+        transition: background 0.2s;
+    }
+    .modal .btn.cancel {
+        background: #eee;
+        color: #333;
+    }
+    .modal .btn:active {
+        opacity: 0.8;
+    }
+    .modal .location-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+    .modal .location-row button {
+        padding: 7px 12px;
+        border-radius: 6px;
+        border: none;
+        background: #8B5CF6;
+        color: #fff;
+        font-size: 0.95rem;
+        cursor: pointer;
+        margin-bottom: 16px;
+    }
+    .modal .location-row button:active {
+        opacity: 0.8;
+    }
+    .modal .modal-close {
+        position: absolute;
+        top: 10px; right: 16px;
+        font-size: 1.3rem;
+        color: #888;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
+        <!-- Navigation -->
+        <!-- Site owner for testing -->
+        <div style="position:fixed;top:0;right:0;z-index:3000;background:linear-gradient(135deg,#8B5CF6,#EC4899,#3B82F6);color:#fff;padding:6px 18px 6px 18px;border-radius:0 0 0 16px;font-weight:600;font-size:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.08);opacity:0.92;">Testing by Arshad</div>
+
+        <!-- Modal Order Form -->
+        <div class="modal-overlay" id="orderModalOverlay">
+            <div class="modal" id="orderModal">
+                <button class="modal-close" id="closeOrderModal" title="Close">&times;</button>
+                <h2>Order Product</h2>
+                <form id="orderForm">
+                    <label>Product</label>
+                    <input type="text" id="modalProduct" name="product" readonly>
+                    <label>Price</label>
+                    <input type="text" id="modalPrice" name="price" readonly>
+                    <label for="customerName">Your Name</label>
+                    <input type="text" id="customerName" name="customerName" required placeholder="Enter your name">
+                    <label for="customerLocation">Location</label>
+                    <div class="location-row">
+                        <input type="text" id="customerLocation" name="customerLocation" required placeholder="Enter your location">
+                        <button type="button" id="getLocationBtn">Use My Location</button>
+                    </div>
+                    <label for="paymentType">Payment Type</label>
+                    <select id="paymentType" name="paymentType" required>
+                        <option value="">Select</option>
+                        <option value="Online">Online</option>
+                        <option value="Cash">Cash</option>
+                    </select>
+                    <div class="modal-actions">
+                        <button type="button" class="btn cancel" id="cancelOrderBtn">Cancel</button>
+                        <button type="submit" class="btn">Order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -283,5 +409,57 @@
     </footer>
 
     <script src="script.js"></script>
+        <script src="script.js"></script>
+        <script>
+        // Modal Order Form Logic
+        let currentProduct = '';
+        let currentPrice = '';
+        function orderProduct(productName, price) {
+            currentProduct = productName;
+            currentPrice = price;
+            document.getElementById('modalProduct').value = productName;
+            document.getElementById('modalPrice').value = price;
+            document.getElementById('orderModalOverlay').style.display = 'flex';
+        }
+        document.getElementById('closeOrderModal').onclick = function() {
+            document.getElementById('orderModalOverlay').style.display = 'none';
+        };
+        document.getElementById('cancelOrderBtn').onclick = function() {
+            document.getElementById('orderModalOverlay').style.display = 'none';
+        };
+        document.getElementById('orderModalOverlay').onclick = function(e) {
+            if (e.target === this) this.style.display = 'none';
+        };
+        document.getElementById('getLocationBtn').onclick = function() {
+            if (navigator.geolocation) {
+                document.getElementById('getLocationBtn').innerText = 'Locating...';
+                navigator.geolocation.getCurrentPosition(function(pos) {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    document.getElementById('customerLocation').value = `Lat: ${lat}, Lng: ${lng}`;
+                    document.getElementById('getLocationBtn').innerText = 'Use My Location';
+                }, function(err) {
+                    alert('Could not fetch location. Please allow location access.');
+                    document.getElementById('getLocationBtn').innerText = 'Use My Location';
+                });
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+        };
+        document.getElementById('orderForm').onsubmit = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('customerName').value.trim();
+            const location = document.getElementById('customerLocation').value.trim();
+            const payment = document.getElementById('paymentType').value;
+            if (!name || !location || !payment) {
+                alert('Please fill all fields.');
+                return;
+            }
+            // For demo: just show a summary and close modal
+            alert(`Order Placed!\n\nProduct: ${currentProduct}\nPrice: ${currentPrice}\nName: ${name}\nLocation: ${location}\nPayment: ${payment}\n\nThank you for your order, Arshad is testing!`);
+            document.getElementById('orderModalOverlay').style.display = 'none';
+            document.getElementById('orderForm').reset();
+        };
+        </script>
 </body>
 </html>
