@@ -113,8 +113,12 @@
                 <form id="orderForm">
                     <label>Product</label>
                     <input type="text" id="modalProduct" name="product" readonly>
-                    <label>Price</label>
+                    <label>Price (per unit)</label>
                     <input type="text" id="modalPrice" name="price" readonly>
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+                    <label>Total</label>
+                    <input type="text" id="totalPrice" name="totalPrice" readonly>
                     <label for="customerName">Your Name</label>
                     <input type="text" id="customerName" name="customerName" required placeholder="Enter your name">
                     <label for="customerLocation">Location</label>
@@ -130,7 +134,7 @@
                     </select>
                     <div class="modal-actions">
                         <button type="button" class="btn cancel" id="cancelOrderBtn">Cancel</button>
-                        <button type="submit" class="btn">Order</button>
+                        <button type="submit" class="btn">Order via WhatsApp</button>
                     </div>
                 </form>
             </div>
@@ -411,54 +415,82 @@
     <script src="script.js"></script>
         <script src="script.js"></script>
         <script>
-        // Modal Order Form Logic
+        // Modal Order Form Logic with Quantity, Total, and WhatsApp integration
         let currentProduct = '';
         let currentPrice = '';
-        function orderProduct(productName, price) {
-            currentProduct = productName;
-            currentPrice = price;
-            document.getElementById('modalProduct').value = productName;
-            document.getElementById('modalPrice').value = price;
-            document.getElementById('orderModalOverlay').style.display = 'flex';
+        function parsePrice(priceStr) {
+          // Extracts number from '₹ 5/Pc' or '₹ 100/Sq Ft'
+          const match = priceStr.match(/([\d.]+)/);
+          return match ? parseFloat(match[1]) : 0;
         }
+        function orderProduct(productName, price) {
+          currentProduct = productName;
+          currentPrice = price;
+          document.getElementById('modalProduct').value = productName;
+          document.getElementById('modalPrice').value = price;
+          document.getElementById('quantity').value = 1;
+          updateTotal();
+          document.getElementById('orderModalOverlay').style.display = 'flex';
+        }
+        function updateTotal() {
+          const qty = parseInt(document.getElementById('quantity').value) || 1;
+          const unitPrice = parsePrice(document.getElementById('modalPrice').value);
+          const currency = document.getElementById('modalPrice').value.trim().charAt(0);
+          const total = qty * unitPrice;
+          document.getElementById('totalPrice').value = currency + ' ' + total + (document.getElementById('modalPrice').value.includes('/Sq Ft') ? '/Sq Ft' : (document.getElementById('modalPrice').value.includes('/Pc') ? '/Pc' : ''));
+        }
+        document.getElementById('quantity').oninput = updateTotal;
         document.getElementById('closeOrderModal').onclick = function() {
-            document.getElementById('orderModalOverlay').style.display = 'none';
+          document.getElementById('orderModalOverlay').style.display = 'none';
         };
         document.getElementById('cancelOrderBtn').onclick = function() {
-            document.getElementById('orderModalOverlay').style.display = 'none';
+          document.getElementById('orderModalOverlay').style.display = 'none';
         };
         document.getElementById('orderModalOverlay').onclick = function(e) {
-            if (e.target === this) this.style.display = 'none';
+          if (e.target === this) this.style.display = 'none';
         };
         document.getElementById('getLocationBtn').onclick = function() {
-            if (navigator.geolocation) {
-                document.getElementById('getLocationBtn').innerText = 'Locating...';
-                navigator.geolocation.getCurrentPosition(function(pos) {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    document.getElementById('customerLocation').value = `Lat: ${lat}, Lng: ${lng}`;
-                    document.getElementById('getLocationBtn').innerText = 'Use My Location';
-                }, function(err) {
-                    alert('Could not fetch location. Please allow location access.');
-                    document.getElementById('getLocationBtn').innerText = 'Use My Location';
-                });
-            } else {
-                alert('Geolocation is not supported by your browser.');
-            }
+          if (navigator.geolocation) {
+            document.getElementById('getLocationBtn').innerText = 'Locating...';
+            navigator.geolocation.getCurrentPosition(function(pos) {
+              const lat = pos.coords.latitude;
+              const lng = pos.coords.longitude;
+              document.getElementById('customerLocation').value = `Lat: ${lat}, Lng: ${lng}`;
+              document.getElementById('getLocationBtn').innerText = 'Use My Location';
+            }, function(err) {
+              alert('Could not fetch location. Please allow location access.');
+              document.getElementById('getLocationBtn').innerText = 'Use My Location';
+            });
+          } else {
+            alert('Geolocation is not supported by your browser.');
+          }
         };
         document.getElementById('orderForm').onsubmit = function(e) {
-            e.preventDefault();
-            const name = document.getElementById('customerName').value.trim();
-            const location = document.getElementById('customerLocation').value.trim();
-            const payment = document.getElementById('paymentType').value;
-            if (!name || !location || !payment) {
-                alert('Please fill all fields.');
-                return;
-            }
-            // For demo: just show a summary and close modal
-            alert(`Order Placed!\n\nProduct: ${currentProduct}\nPrice: ${currentPrice}\nName: ${name}\nLocation: ${location}\nPayment: ${payment}\n\nThank you for your order, Arshad is testing!`);
-            document.getElementById('orderModalOverlay').style.display = 'none';
-            document.getElementById('orderForm').reset();
+          e.preventDefault();
+          const name = document.getElementById('customerName').value.trim();
+          const location = document.getElementById('customerLocation').value.trim();
+          const payment = document.getElementById('paymentType').value;
+          const qty = parseInt(document.getElementById('quantity').value) || 1;
+          const total = document.getElementById('totalPrice').value;
+          if (!name || !location || !payment || !qty) {
+            alert('Please fill all fields.');
+            return;
+          }
+          // Try to extract lat/lng from location if possible
+          let mapsLink = '';
+          const latlngMatch = location.match(/Lat:\s*([\d.\-]+),\s*Lng:\s*([\d.\-]+)/);
+          if (latlngMatch) {
+            const lat = latlngMatch[1];
+            const lng = latlngMatch[2];
+            mapsLink = `https://maps.google.com/?q=${lat},${lng}`;
+          }
+          let message = `Hello,\n\nI want to order:\nProduct: ${currentProduct}\nUnit Price: ${currentPrice}\nQuantity: ${qty}\nTotal: ${total}\nName: ${name}\nLocation: ${location}`;
+          if (mapsLink) message += `\nGoogle Maps: ${mapsLink}`;
+          message += `\nPayment Type: ${payment}\n\nThank you!`;
+          const whatsappURL = `https://wa.me/917760554350?text=${encodeURIComponent(message)}`;
+          window.open(whatsappURL, '_blank');
+          document.getElementById('orderModalOverlay').style.display = 'none';
+          document.getElementById('orderForm').reset();
         };
         </script>
 </body>
