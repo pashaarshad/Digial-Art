@@ -31,8 +31,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // WhatsApp Order Function
 function orderProduct(productName, price) {
-    const phoneNumber = "919663452045";
-    const message = `Hello Digital Art!
+    const phoneNumber = "917760554350";
+    const message = `Hello Random Report!
 
 I want to order: ${productName}
 Price: ${price}
@@ -182,6 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Console log for debugging
-console.log('Digital Art Website - JavaScript Loaded Successfully!');
-console.log('Contact: +91 97249 76709');
-console.log('Business: Digital Art - Sign Board Manufacturers & Printing Services');
+console.log('Random Report Website - JavaScript Loaded Successfully!');
+console.log('Contact: +91 77605 54350');
+console.log('Business: Random Report - Sign Board Manufacturers & Printing Services');
